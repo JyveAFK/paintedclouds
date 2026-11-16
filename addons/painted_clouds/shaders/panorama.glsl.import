@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://bjus2ufcf3chy"
+path="res://.godot/imported/panorama.glsl-0ccbafbaa9cb7323272ec3cad90b6bbc.res"
+
+[deps]
+
+source_file="res://addons/painted_clouds/shaders/panorama.glsl"
+dest_files=["res://.godot/imported/panorama.glsl-0ccbafbaa9cb7323272ec3cad90b6bbc.res"]
+
+[params]
+

@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://bcea3d84xtnhw"
+path="res://.godot/imported/bake_sdf.glsl-04528df3106802ce1c1df6ebce61a8d9.res"
+
+[deps]
+
+source_file="res://addons/painted_clouds/shaders/bake_sdf.glsl"
+dest_files=["res://.godot/imported/bake_sdf.glsl-04528df3106802ce1c1df6ebce61a8d9.res"]
+
+[params]
+

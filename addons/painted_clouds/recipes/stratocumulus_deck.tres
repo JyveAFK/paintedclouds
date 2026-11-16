@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="PaintedCloudRecipe" format=3 uid="uid://bkk5o50pwnaky"]
+
+[ext_resource type="Script" uid="uid://bbngyytll7t6e" path="res://addons/painted_clouds/cloud_lobe_rule.gd" id="1_tu2qu"]
+[ext_resource type="Script" uid="uid://bnxlqtffoje4u" path="res://addons/painted_clouds/cloud_part.gd" id="2_hwdcu"]
+[ext_resource type="Script" uid="uid://bcdbg2u14hvbd" path="res://addons/painted_clouds/cloud_recipe.gd" id="3_j1j8m"]
+
+[sub_resource type="Resource" id="Resource_vvocy"]
+script = ExtResource("1_tu2qu")
+placement = 2
+count = 0
+count_per_parent = 0.6
+size = Vector2(0.4, 0.65)
+outward = Vector2(0.3, 0.7)
+up_bias = 1.0
+squash_scale = 1.4
+
+[resource]
+script = ExtResource("3_j1j8m")
+display_name = "Stratocumulus Deck"
+gizmo_color = Color(0.75, 0.8, 0.95, 0.7)
+noise_scale = 0.7
+sheet = true
+sheet_cell = 0.11
+sheet_coverage = 0.85
+sheet_puff_size = Vector2(0.65, 1)
+sheet_edge = 0.3
+sheet_clumping = 0.45
+sheet_height_jitter = 0.25
+lobes = Array[ExtResource("1_tu2qu")]([SubResource("Resource_vvocy")])

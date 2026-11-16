@@ -1,0 +1,193 @@
+[gd_scene format=3 uid="uid://cu323h4du4jw"]
+
+[ext_resource type="Script" uid="uid://8enesqmakfus" path="res://addons/painted_clouds/painted_clouds_effect.gd" id="1_xnskl"]
+[ext_resource type="Script" uid="uid://clwjgh3d02gpf" path="res://demo/sun_spinner.gd" id="2_lr71n"]
+[ext_resource type="Script" uid="uid://bja4rb7twmx7e" path="res://demo/fly_camera.gd" id="3_mghor"]
+[ext_resource type="Script" uid="uid://cgbip4fvysy0q" path="res://demo/hud.gd" id="4_faqfd"]
+[ext_resource type="Script" uid="uid://bj55qnhuk6p76" path="res://addons/painted_clouds/cloud_tile_world.gd" id="5_g46h2"]
+[ext_resource type="Script" uid="uid://bgdsee7rdr5gh" path="res://addons/painted_clouds/cloud_layer.gd" id="6_ysaej"]
+[ext_resource type="Script" uid="uid://1ynxinnlcv21" path="res://addons/painted_clouds/cloud_scatter_rule.gd" id="7_o3cpn"]
+[ext_resource type="Resource" uid="uid://bkk5o50pwnaky" path="res://addons/painted_clouds/recipes/stratocumulus_deck.tres" id="8_6qeon"]
+[ext_resource type="Resource" uid="uid://dwf6aufbd5dg1" path="res://addons/painted_clouds/recipes/altocumulus_field.tres" id="9_1wot0"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8rfdr"]
+sky_top_color = Color(0.09, 0.3, 0.74, 1)
+sky_horizon_color = Color(0.5, 0.68, 0.92, 1)
+sky_curve = 0.12
+ground_bottom_color = Color(0.2, 0.38, 0.72, 1)
+ground_horizon_color = Color(0.5, 0.68, 0.92, 1)
+sun_angle_max = 8.0
+
+[sub_resource type="Sky" id="Sky_6ihnu"]
+sky_material = SubResource("ProceduralSkyMaterial_8rfdr")
+
+[sub_resource type="Environment" id="Environment_mosls"]
+background_mode = 2
+sky = SubResource("Sky_6ihnu")
+ambient_light_source = 3
+
+[sub_resource type="Gradient" id="Gradient_p1aj5"]
+offsets = PackedFloat32Array(0, 0.3, 0.55, 0.78, 1)
+colors = PackedColorArray(0.20784314, 0.34509805, 0.6666667, 1, 0.49019608, 0.53333336, 0.8117647, 1, 0.8039216, 0.7019608, 0.8627451, 1, 0.972549, 0.9137255, 0.9411765, 1, 1, 0.9843137, 0.9529412, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1d2gs"]
+gradient = SubResource("Gradient_p1aj5")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jv588"]
+noise_type = 2
+frequency = 0.07
+fractal_octaves = 2
+
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_xam2y"]
+noise = SubResource("FastNoiseLite_jv588")
+seamless = true
+invert = true
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_fla3q"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("1_xnskl")
+gradient = SubResource("GradientTexture1D_1d2gs")
+noise = SubResource("NoiseTexture3D_xam2y")
+
+[sub_resource type="Compositor" id="Compositor_a0ng0"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_fla3q")])
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7h7tp"]
+albedo_color = Color(0.55, 0.42, 0.32, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_143ej"]
+material = SubResource("StandardMaterial3D_7h7tp")
+top_radius = 1400.0
+bottom_radius = 300.0
+height = 900.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ntps4"]
+albedo_color = Color(1, 0.3, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.3, 0.2, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_urb6m"]
+material = SubResource("StandardMaterial3D_ntps4")
+radius = 120.0
+height = 240.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ha3dm"]
+albedo_color = Color(1, 0.85, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.2, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_5t1n4"]
+material = SubResource("StandardMaterial3D_ha3dm")
+radius = 40.0
+height = 80.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cicse"]
+frequency = 7e-05
+fractal_octaves = 3
+
+[sub_resource type="Resource" id="Resource_gevq7"]
+script = ExtResource("6_ysaej")
+layer_name = "Main cumulus"
+noise = SubResource("FastNoiseLite_cicse")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_psq5q"]
+frequency = 4e-05
+fractal_octaves = 2
+
+[sub_resource type="Resource" id="Resource_5akq1"]
+script = ExtResource("7_o3cpn")
+recipe = ExtResource("8_6qeon")
+noise_range = Vector2(0.45, 1)
+chance = 0.85
+radius = Vector2(5000, 8500)
+height = Vector2(450, 750)
+altitude = Vector2(-100, 100)
+
+[sub_resource type="Resource" id="Resource_y7xsv"]
+script = ExtResource("6_ysaej")
+layer_name = "Low decks"
+noise = SubResource("FastNoiseLite_psq5q")
+spacing = 13000.0
+altitude = 600.0
+seed_offset = 100
+rules = Array[ExtResource("7_o3cpn")]([SubResource("Resource_5akq1")])
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kusgi"]
+frequency = 5e-05
+fractal_octaves = 2
+
+[sub_resource type="Resource" id="Resource_4s2cy"]
+script = ExtResource("7_o3cpn")
+recipe = ExtResource("9_1wot0")
+chance = 0.8
+radius = Vector2(3500, 5500)
+height = Vector2(300, 500)
+altitude = Vector2(-300, 300)
+size_from_noise = 0.3
+
+[sub_resource type="Resource" id="Resource_7kwt5"]
+script = ExtResource("6_ysaej")
+layer_name = "High altocumulus"
+noise = SubResource("FastNoiseLite_kusgi")
+spacing = 9000.0
+altitude = 5500.0
+seed_offset = 200
+rules = Array[ExtResource("7_o3cpn")]([SubResource("Resource_4s2cy")])
+
+[node name="Demo" type="Node3D" unique_id=358741458]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=133124312]
+environment = SubResource("Environment_mosls")
+compositor = SubResource("Compositor_a0ng0")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=292212798]
+transform = Transform3D(0.81915206, -0.3039492, 0.48642042, 0, 0.8480481, 0.52991927, -0.57357645, -0.43408445, 0.69468033, 0, 0, 0)
+light_energy = 1.1
+shadow_enabled = true
+script = ExtResource("2_lr71n")
+
+[node name="FloatingIsland" type="MeshInstance3D" parent="." unique_id=605143418]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2500, 2600, 6000)
+mesh = SubResource("CylinderMesh_143ej")
+
+[node name="Beacon" type="MeshInstance3D" parent="." unique_id=1523287865]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4500, 4000, -13000)
+mesh = SubResource("SphereMesh_urb6m")
+
+[node name="HoldMarker" type="MeshInstance3D" parent="." unique_id=2118798924]
+mesh = SubResource("SphereMesh_5t1n4")
+
+[node name="FlyCamera" type="Camera3D" parent="." unique_id=753654778]
+transform = Transform3D(1, 0, 0, 0, 0.9945219, -0.104528464, 0, 0.104528464, 0.9945219, 0, 2400, 16000)
+current = true
+fov = 70.0
+far = 120000.0
+script = ExtResource("3_mghor")
+
+[node name="HUD" type="Label" parent="." unique_id=161521659 node_paths=PackedStringArray("beacon", "hold_marker")]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 12.0
+offset_bottom = 8.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+script = ExtResource("4_faqfd")
+beacon = NodePath("../Beacon")
+hold_marker = NodePath("../HoldMarker")
+
+[node name="PaintedCloudTileWorld" type="Node3D" parent="." unique_id=300581769 node_paths=PackedStringArray("target", "sun", "shift_root")]
+script = ExtResource("5_g46h2")
+target = NodePath("../FlyCamera")
+voxel_size = 400.0
+layers = Array[ExtResource("6_ysaej")]([SubResource("Resource_gevq7"), SubResource("Resource_y7xsv"), SubResource("Resource_7kwt5")])
+sun = NodePath("../Sun")
+far_rings = 0
+shift_threshold = 30000.0
+shift_root = NodePath("..")

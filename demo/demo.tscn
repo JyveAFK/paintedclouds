@@ -1,0 +1,2445 @@
+[gd_scene format=3 uid="uid://h0enoqtujjxr"]
+
+[ext_resource type="Script" uid="uid://8enesqmakfus" path="res://addons/painted_clouds/painted_clouds_effect.gd" id="1_xm42s"]
+[ext_resource type="Script" uid="uid://cdihexhdgob8a" path="res://addons/painted_clouds/cloud_volume.gd" id="2_tdg64"]
+[ext_resource type="Script" uid="uid://cwhyb5u4ek0t" path="res://addons/painted_clouds/cloud_scatter.gd" id="3_nk31j"]
+[ext_resource type="Script" uid="uid://csqymdawdedkt" path="res://addons/painted_clouds/cloud_point.gd" id="4_fy1p0"]
+[ext_resource type="Resource" uid="uid://382ow5rnoysj" path="res://addons/painted_clouds/recipes/cumulus.tres" id="5_svvho"]
+[ext_resource type="Resource" uid="uid://qkdpflce7itk" path="res://addons/painted_clouds/recipes/tower.tres" id="6_x31ta"]
+[ext_resource type="Resource" uid="uid://dhoa0qduj5g6x" path="res://addons/painted_clouds/recipes/low_patch.tres" id="7_d1m6b"]
+[ext_resource type="Script" uid="uid://1ynxinnlcv21" path="res://addons/painted_clouds/cloud_scatter_rule.gd" id="8_k1rqu"]
+[ext_resource type="Resource" uid="uid://bkk5o50pwnaky" path="res://addons/painted_clouds/recipes/stratocumulus_deck.tres" id="9_wwhtr"]
+[ext_resource type="Resource" uid="uid://dwf6aufbd5dg1" path="res://addons/painted_clouds/recipes/altocumulus_field.tres" id="10_62gnj"]
+[ext_resource type="Script" uid="uid://bja4rb7twmx7e" path="res://demo/fly_camera.gd" id="11_vkopi"]
+[ext_resource type="Script" uid="uid://cgbip4fvysy0q" path="res://demo/hud.gd" id="12_qvfii"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8rfdr"]
+sky_top_color = Color(0.09, 0.3, 0.74, 1)
+sky_horizon_color = Color(0.5, 0.68, 0.92, 1)
+sky_curve = 0.12
+ground_bottom_color = Color(0.2, 0.38, 0.72, 1)
+ground_horizon_color = Color(0.5, 0.68, 0.92, 1)
+sun_angle_max = 8.0
+
+[sub_resource type="Sky" id="Sky_6ihnu"]
+sky_material = SubResource("ProceduralSkyMaterial_8rfdr")
+
+[sub_resource type="Environment" id="Environment_mosls"]
+background_mode = 2
+sky = SubResource("Sky_6ihnu")
+ambient_light_source = 3
+
+[sub_resource type="Gradient" id="Gradient_p1aj5"]
+offsets = PackedFloat32Array(0, 0.3, 0.55, 0.78, 1)
+colors = PackedColorArray(0.20784314, 0.34509805, 0.6666667, 1, 0.49019608, 0.53333336, 0.8117647, 1, 0.8039216, 0.7019608, 0.8627451, 1, 0.972549, 0.9137255, 0.9411765, 1, 1, 0.9843137, 0.9529412, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_1d2gs"]
+gradient = SubResource("Gradient_p1aj5")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_jv588"]
+noise_type = 2
+frequency = 0.07
+fractal_octaves = 2
+
+[sub_resource type="NoiseTexture3D" id="NoiseTexture3D_xam2y"]
+noise = SubResource("FastNoiseLite_jv588")
+seamless = true
+invert = true
+
+[sub_resource type="CompositorEffect" id="CompositorEffect_fla3q"]
+resource_local_to_scene = false
+resource_name = ""
+enabled = true
+effect_callback_type = 4
+needs_motion_vectors = false
+needs_normal_roughness = false
+script = ExtResource("1_xm42s")
+gradient = SubResource("GradientTexture1D_1d2gs")
+noise = SubResource("NoiseTexture3D_xam2y")
+
+[sub_resource type="Compositor" id="Compositor_a0ng0"]
+compositor_effects = Array[CompositorEffect]([SubResource("CompositorEffect_fla3q")])
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7h7tp"]
+albedo_color = Color(0.55, 0.42, 0.32, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_143ej"]
+material = SubResource("StandardMaterial3D_7h7tp")
+top_radius = 1400.0
+bottom_radius = 300.0
+height = 900.0
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_u5t42"]
+seed = 7
+frequency = 7e-05
+fractal_octaves = 3
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_5de16"]
+seed = 21
+frequency = 4e-05
+
+[sub_resource type="Resource" id="Resource_h5sl1"]
+script = ExtResource("8_k1rqu")
+recipe = ExtResource("9_wwhtr")
+noise_range = Vector2(0.45, 1)
+chance = 0.85
+radius = Vector2(5000, 8500)
+height = Vector2(450, 750)
+altitude = Vector2(-100, 100)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_norpd"]
+seed = 33
+frequency = 5e-05
+
+[sub_resource type="Resource" id="Resource_7eb7w"]
+script = ExtResource("8_k1rqu")
+recipe = ExtResource("10_62gnj")
+chance = 0.8
+radius = Vector2(3500, 5500)
+height = Vector2(300, 500)
+altitude = Vector2(-300, 300)
+size_from_noise = 0.3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ntps4"]
+albedo_color = Color(1, 0.3, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.3, 0.2, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_urb6m"]
+material = SubResource("StandardMaterial3D_ntps4")
+radius = 120.0
+height = 240.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ha3dm"]
+albedo_color = Color(1, 0.85, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.2, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_5t1n4"]
+material = SubResource("StandardMaterial3D_ha3dm")
+radius = 40.0
+height = 80.0
+
+[node name="Demo" type="Node3D" unique_id=1307928496]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2145990906]
+environment = SubResource("Environment_mosls")
+compositor = SubResource("Compositor_a0ng0")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1511386387]
+transform = Transform3D(0.81915206, -0.3039492, 0.48642042, 0, 0.8480481, 0.52991927, -0.57357645, -0.43408445, 0.69468033, 0, 0, 0)
+light_energy = 1.1
+shadow_enabled = true
+
+[node name="FloatingIsland" type="MeshInstance3D" parent="." unique_id=2044064475]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2500, 2600, 6000)
+mesh = SubResource("CylinderMesh_143ej")
+
+[node name="PaintedCloudVolume" type="Node3D" parent="." unique_id=1877463856 node_paths=PackedStringArray("sun")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6000, 0)
+script = ExtResource("2_tdg64")
+voxel_size = 1000.0
+sun = NodePath("../Sun")
+
+[node name="MainLayer" type="Node3D" parent="PaintedCloudVolume" unique_id=1508663136]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -4500, 0)
+script = ExtResource("3_nk31j")
+noise = SubResource("FastNoiseLite_u5t42")
+area_size = Vector2(44000, 44000)
+scatter_seed = 7
+
+[node name="Cumulus_0" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1169477464]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21472.1, -109.271355, -4623.2285)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1012.5072439170538
+height = 2493.839063556703
+lobe_seed = 1619671523
+
+[node name="Tower_0" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1409914531]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21724.498, 118.86077, -2202.2083)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1391.3096510989235
+height = 6480.29038652689
+lobe_seed = 371663156
+
+[node name="Tower_1" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1943233953]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20724.531, -104.78849, -1661.7767)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1652.7758306446867
+height = 6226.661958767254
+lobe_seed = 3534404375
+
+[node name="Cumulus_1" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=812132591]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21570.154, 71.21517, 392.79535)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 995.1241325751852
+height = 2101.260451099509
+lobe_seed = 3985143962
+
+[node name="LowPatch_0" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=518478819]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20181.521, -68.15632, 3196.41)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 767.9055104024237
+height = 354.9952510896253
+lobe_seed = 3607554377
+
+[node name="LowPatch_1" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2081485089]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21778.58, 89.124725, 5210.761)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 978.5530621376712
+height = 407.02975518865213
+lobe_seed = 4006796370
+
+[node name="Cumulus_2" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1086140955]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21431.137, 30.995537, 8665.422)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 919.0623743408376
+height = 1772.079633918861
+lobe_seed = 3933289721
+
+[node name="Cumulus_3" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1635369447]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19955.025, -102.87852, 9566.047)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 940.7790712420554
+height = 2025.1973574257945
+lobe_seed = 3622465586
+
+[node name="Cumulus_4" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1272756310]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20233.04, 18.56777, 11250.236)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 786.660835878458
+height = 2058.494780752675
+lobe_seed = 1008611635
+
+[node name="Tower_2" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=725065314]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -21843.717, -34.09701, 14576.883)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1398.0426022121596
+height = 5194.637594107505
+lobe_seed = 1064551593
+
+[node name="Tower_3" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1875556555]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20556.834, 70.54523, 15793.042)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1409.191803333459
+height = 6521.709983338107
+lobe_seed = 808156958
+
+[node name="LowPatch_2" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=310676099]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17650.629, 83.72358, -18985.748)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 811.0161753643458
+height = 349.0684939816969
+lobe_seed = 1474771447
+
+[node name="LowPatch_3" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1054686790]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18395.52, -142.0635, -16777.39)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 801.1718268061163
+height = 402.5515117109021
+lobe_seed = 3433230213
+
+[node name="LowPatch_4" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2079815691]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18077.148, 58.23396, -14293.234)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 888.1903882284305
+height = 370.41107546369824
+lobe_seed = 3359569407
+
+[node name="Cumulus_5" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1602953519]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19745.1, 51.83882, -2835.3376)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1126.6017562304532
+height = 2504.0327755437397
+lobe_seed = 1841773303
+
+[node name="Cumulus_6" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1904765814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18197.795, -57.774372, -1074.9816)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1032.0834649290337
+height = 2279.2570344087976
+lobe_seed = 395998198
+
+[node name="Cumulus_7" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1221081260]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19757.39, -134.59587, 1327.1234)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 859.3188361996841
+height = 1756.1884200592804
+lobe_seed = 636727314
+
+[node name="LowPatch_5" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1166030462]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19006.04, 57.079876, 3959.2878)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 767.3101100739357
+height = 443.92885902757934
+lobe_seed = 2055192337
+
+[node name="Cumulus_8" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=218058367]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19543.83, 12.785, 5178.988)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 823.4962068435932
+height = 1910.2689115756032
+lobe_seed = 993221443
+
+[node name="Cumulus_9" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=360696574]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18352.363, -63.169876, 7720.3857)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1267.6949816111403
+height = 2492.0967336630006
+lobe_seed = 2147894278
+
+[node name="Cumulus_10" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=133792899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19553.604, -8.174765, 9657.072)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 952.129347273784
+height = 2042.3318439272737
+lobe_seed = 2844022706
+
+[node name="Cumulus_11" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1686439988]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19239.766, 119.71475, 11615.084)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1245.5503310438737
+height = 2927.1095971575996
+lobe_seed = 4265799676
+
+[node name="Tower_4" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1448920212]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18631.123, 17.10577, 14268.681)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1262.2951072589838
+height = 5954.924677664551
+lobe_seed = 2407498582
+
+[node name="Cumulus_12" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1832343458]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19056.953, 123.412766, 16545.664)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 903.4294765093404
+height = 1700.7033677352697
+lobe_seed = 4223396471
+
+[node name="LowPatch_6" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1476794989]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19513.172, 108.37292, 18287.926)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 710.4132667458576
+height = 314.97937628281295
+lobe_seed = 4163018688
+
+[node name="Cumulus_13" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=900954421]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16750.133, -121.44047, -21580.066)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1125.6238005978566
+height = 2492.4049162241477
+lobe_seed = 3738612997
+
+[node name="LowPatch_7" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=839577243]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16684.076, 121.919044, -18413.902)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 772.3382957775252
+height = 412.53041384943896
+lobe_seed = 3517641400
+
+[node name="Cumulus_14" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=149640061]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15833.941, 121.29605, -15514.552)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 938.3897728962856
+height = 1701.7361690086527
+lobe_seed = 710233944
+
+[node name="Cumulus_15" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1951645889]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17363.428, -83.8211, -13713.581)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 683.6731524096125
+height = 1613.1573289188814
+lobe_seed = 3770152666
+
+[node name="LowPatch_8" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=660731302]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15438.766, 57.994564, -11829.3)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 929.8749470962532
+height = 360.18876631939565
+lobe_seed = 1275882123
+
+[node name="Cumulus_16" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=380206070]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17531.734, -8.411962, -233.3874)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 905.9699702610174
+height = 2030.0583315788676
+lobe_seed = 2206550089
+
+[node name="Cumulus_17" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=730781222]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17060.104, 83.624214, 666.81226)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 893.7377966028718
+height = 1958.2435340325153
+lobe_seed = 739871756
+
+[node name="Cumulus_18" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=764295713]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16365.345, -97.72458, 3728.342)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 929.2302442105592
+height = 1362.436779974694
+lobe_seed = 233206023
+
+[node name="LowPatch_9" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1487534043]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15939.007, 22.384697, 5134.3994)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 775.5960596693199
+height = 403.7852901175884
+lobe_seed = 348170154
+
+[node name="Cumulus_19" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=912894153]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16720.756, -69.00804, 7934.9663)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 836.6452311878359
+height = 2104.9657918057155
+lobe_seed = 1799954650
+
+[node name="Tower_5" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=522711740]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17178.018, 134.00761, 9522.03)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1464.4081164890915
+height = 6445.914192793525
+lobe_seed = 1157796773
+
+[node name="Cumulus_20" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1211164693]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15946.951, -100.15099, 11966.943)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 942.7328023513408
+height = 2161.1721210480373
+lobe_seed = 2819311558
+
+[node name="Cumulus_21" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1181709114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16385.662, 43.944294, 14340.165)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 645.3596816621124
+height = 1391.1078018363628
+lobe_seed = 401554222
+
+[node name="Cumulus_22" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1094077234]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15470.356, 144.72446, 15998.747)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 831.7555081536269
+height = 1576.6323228452625
+lobe_seed = 1763499951
+
+[node name="Cumulus_23" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=979472593]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16009.811, -96.22154, 18430.705)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1032.6026409769788
+height = 1890.6093391106983
+lobe_seed = 2540062650
+
+[node name="Cumulus_24" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=872268211]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14808.18, 127.57972, -21389.215)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 675.889305148112
+height = 1775.512976834401
+lobe_seed = 1391372177
+
+[node name="LowPatch_10" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=229940256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14352.826, -127.58222, -17701.076)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 988.54262525922
+height = 387.7123004243023
+lobe_seed = 4029233555
+
+[node name="Cumulus_25" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=651298526]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14023.278, -21.652597, -15929.436)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 986.9169907215768
+height = 1611.7171640762776
+lobe_seed = 2250429658
+
+[node name="Cumulus_26" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=578710035]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14323.253, 15.635723, -15233.479)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 945.3550392545884
+height = 2094.347247606761
+lobe_seed = 316779840
+
+[node name="Cumulus_27" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1121504660]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14398.293, 126.790596, -11951.168)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1010.69687675897
+height = 1976.638667706005
+lobe_seed = 208068897
+
+[node name="Cumulus_28" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=269860425]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14061.548, 57.751305, -9386.335)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 911.21422275964
+height = 1796.3588513237305
+lobe_seed = 3864022317
+
+[node name="LowPatch_11" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1092601987]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14739.662, -44.33748, -8234.926)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 819.6649612294622
+height = 324.5167003825819
+lobe_seed = 412372970
+
+[node name="LowPatch_12" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2040455007]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14585.985, -56.215096, -5466.627)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 731.9268259425032
+height = 396.0348902898973
+lobe_seed = 2134725856
+
+[node name="Cumulus_29" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1437225944]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14581.355, 148.15143, -2948.6362)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 946.2217550434584
+height = 2225.8980092724514
+lobe_seed = 1362977581
+
+[node name="Cumulus_30" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1619071098]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15331.7295, -120.61952, -1932.6759)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 993.965539687175
+height = 2103.969276342984
+lobe_seed = 660290383
+
+[node name="LowPatch_13" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1887768928]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15338.057, -20.84308, 1466.7858)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 721.3212827437764
+height = 381.7205594477407
+lobe_seed = 3606868707
+
+[node name="LowPatch_14" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=753506599]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13667.64, -67.22066, 6401.1226)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 723.1756400675723
+height = 399.2375649350861
+lobe_seed = 3661466531
+
+[node name="Cumulus_31" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1072862890]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15169.177, -25.460743, 10600.652)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 710.2573169747658
+height = 1582.1699691192591
+lobe_seed = 1619381051
+
+[node name="Cumulus_32" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1782766655]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15066.255, -44.78876, 11191.348)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 797.3479445730541
+height = 1958.8556037515132
+lobe_seed = 3903424609
+
+[node name="LowPatch_15" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=889900659]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14144.035, 103.1495, 14943.268)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1057.0442079268803
+height = 387.5566701824016
+lobe_seed = 2546281208
+
+[node name="LowPatch_16" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=399309948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13782.545, -57.18491, 15932.507)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1069.3189729286803
+height = 387.1099034752106
+lobe_seed = 3787749858
+
+[node name="LowPatch_17" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1990079936]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13661.8545, -73.79181, 18124.162)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 779.6580355510364
+height = 357.11175125279567
+lobe_seed = 3927454972
+
+[node name="LowPatch_18" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2033805673]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13137.913, -111.484276, -19160.004)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 967.747854561714
+height = 379.1802783687528
+lobe_seed = 2100187702
+
+[node name="Tower_6" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=625127399]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11039.042, -12.124765, -15568.371)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1556.6223753767258
+height = 6461.33776238642
+lobe_seed = 2502820651
+
+[node name="Tower_7" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=655400431]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12200.281, -140.32901, -14830.671)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1573.5486685302392
+height = 5798.868858443314
+lobe_seed = 1505889909
+
+[node name="Cumulus_33" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=222425981]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11249.313, -2.2586703, -11566.149)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 937.0400798483494
+height = 2264.633468261055
+lobe_seed = 1515670761
+
+[node name="Cumulus_34" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=652554140]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11494.294, -131.97888, -9746.148)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1096.1520991186808
+height = 2470.074434653481
+lobe_seed = 2189789112
+
+[node name="Cumulus_35" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1294549829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13195.837, -130.55063, -7873.7393)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1021.8167995957434
+height = 2655.017951781724
+lobe_seed = 1245538589
+
+[node name="Cumulus_36" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=217505492]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12849.746, 50.462296, -5011.678)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1032.9887272216797
+height = 2284.481122484698
+lobe_seed = 2860101167
+
+[node name="Tower_8" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1496479343]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11084.082, -30.864304, -4034.833)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1544.277277551328
+height = 6913.867270796438
+lobe_seed = 352944425
+
+[node name="Cumulus_37" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=883310754]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11220.275, 56.309883, -758.6622)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 830.2441646507694
+height = 2129.823614320921
+lobe_seed = 2034202395
+
+[node name="LowPatch_19" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=420332320]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11747.459, 1.3534248, 3510.9695)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 912.89369434332
+height = 354.17016210744424
+lobe_seed = 438992153
+
+[node name="LowPatch_20" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1410078644]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12185.702, -35.313553, 14584.793)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 940.039084624938
+height = 362.43418035891807
+lobe_seed = 842104908
+
+[node name="LowPatch_21" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1610789173]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10858.841, -57.504128, -19470.984)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 634.7859748956225
+height = 375.5790222335467
+lobe_seed = 401768807
+
+[node name="Cumulus_38" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1864469084]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9045.065, -117.67904, -16905.537)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 746.2221711248471
+height = 1677.836848591987
+lobe_seed = 2966071327
+
+[node name="Tower_9" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1308887833]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10413.682, 95.21395, -13882.223)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1594.2410836290803
+height = 6186.534265546596
+lobe_seed = 2597100713
+
+[node name="Cumulus_39" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1790847044]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10827.444, 113.91896, -11927.118)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1193.2145238508492
+height = 2836.900908757034
+lobe_seed = 3346545931
+
+[node name="Tower_10" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1547037044]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10999.438, -88.435524, -9560.887)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1509.1452819723522
+height = 6121.039216764227
+lobe_seed = 237730489
+
+[node name="Tower_11" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=523616899]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10108.658, 144.34373, -8320.724)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1282.688807997452
+height = 5504.404233111329
+lobe_seed = 793459687
+
+[node name="Tower_12" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=948834490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10896.779, -94.258675, -4829.568)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1675.3441417373745
+height = 6179.976586166035
+lobe_seed = 1279546790
+
+[node name="Cumulus_40" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=365561204]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9963.903, 127.89365, -2678.6895)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1208.0240264065362
+height = 2336.943852099512
+lobe_seed = 1024079075
+
+[node name="Cumulus_41" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1084965506]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9237.025, -28.030586, -595.57733)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 961.9913781600976
+height = 1941.0398454967017
+lobe_seed = 2713955199
+
+[node name="Cumulus_42" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1713618681]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8926.415, -44.194893, 1814.7798)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 848.6256843414538
+height = 1938.023716451432
+lobe_seed = 1459462173
+
+[node name="Cumulus_43" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1268936341]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9264.014, 47.241943, 2317.415)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 833.3644711030962
+height = 1659.0471488161024
+lobe_seed = 2862042568
+
+[node name="Cumulus_44" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1473758421]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10434.303, 130.84499, 5046.2217)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 857.1205636178074
+height = 1877.8562114020633
+lobe_seed = 2881138224
+
+[node name="LowPatch_22" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=566067328]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9367.492, -147.56203, 15042.592)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 877.9983100124485
+height = 289.4740288074765
+lobe_seed = 3311379760
+
+[node name="LowPatch_23" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=92914932]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9933.4375, 147.68321, 17168.502)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 649.8688542896027
+height = 377.2399932168224
+lobe_seed = 2305151092
+
+[node name="Cumulus_45" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1105963531]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7333.9116, 104.68637, -16544.877)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1015.8568568625944
+height = 1916.129982028407
+lobe_seed = 2931711824
+
+[node name="Tower_13" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=261731354]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8745.657, 3.6432624, -14955.72)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1484.3004080628211
+height = 5558.654083003543
+lobe_seed = 238875292
+
+[node name="LowPatch_24" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1943766230]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8061.7764, -59.875263, -12608.86)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 785.2655888864165
+height = 462.97030528671064
+lobe_seed = 1351119844
+
+[node name="Cumulus_46" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1560715774]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7844.118, 81.43568, -2217.605)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 892.8923058433008
+height = 1712.136602722578
+lobe_seed = 4105838066
+
+[node name="Cumulus_47" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1165101446]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7259.5317, 143.43407, -621.35254)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 919.7412936054682
+height = 1715.1465787622797
+lobe_seed = 1490763847
+
+[node name="Cumulus_48" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=730843672]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7786.7583, -127.163086, 602.78955)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 934.4780177212342
+height = 2349.3219970813607
+lobe_seed = 3732658635
+
+[node name="LowPatch_25" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1626696723]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8263.781, 98.303696, 4237.986)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 734.7675026567234
+height = 372.8544141315526
+lobe_seed = 1635655320
+
+[node name="LowPatch_26" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=960489072]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7481.5586, -58.972782, 4652.093)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 848.3446214148048
+height = 394.158334928612
+lobe_seed = 943329563
+
+[node name="Cumulus_49" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1625579823]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7491.71, -16.436926, 8591.655)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 629.5511593444585
+height = 1375.1318331002926
+lobe_seed = 1398022808
+
+[node name="Cumulus_50" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=602160893]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7399.187, 58.247585, 10106.504)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 808.9501663591664
+height = 1350.192532167997
+lobe_seed = 681818090
+
+[node name="Cumulus_51" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=225127638]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7462.6367, -25.456398, 12281.587)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 894.597291906531
+height = 2071.264044795348
+lobe_seed = 194087851
+
+[node name="LowPatch_27" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1124797864]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8633.381, 123.75871, 14757.176)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1066.8007700590304
+height = 481.7223958235653
+lobe_seed = 2951673367
+
+[node name="LowPatch_28" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=310904719]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6828.0947, -91.368614, 17473.662)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 719.4226560654641
+height = 268.49324867387617
+lobe_seed = 1845997788
+
+[node name="LowPatch_29" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=297566675]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5882.226, -72.57389, -18854.686)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 700.5985176425794
+height = 356.84002711796177
+lobe_seed = 3749230154
+
+[node name="Cumulus_52" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1821160936]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4984.7734, 31.551826, -16876.809)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 850.4859311760617
+height = 2168.6444737698102
+lobe_seed = 2598600175
+
+[node name="LowPatch_30" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1052615781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5495.98, -64.05035, -14455.417)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 711.5671417036035
+height = 445.22754236097046
+lobe_seed = 1799544035
+
+[node name="LowPatch_31" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1664775341]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4470.644, 130.46082, -11989.468)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 698.679658130729
+height = 355.0667449649522
+lobe_seed = 2081031419
+
+[node name="LowPatch_32" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1840089240]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4452.588, 116.22591, -5262.6523)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 830.3394821850259
+height = 371.3797391937755
+lobe_seed = 2796163204
+
+[node name="Cumulus_53" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1121756726]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5131.2935, -97.39853, -253.48822)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 786.4429724662305
+height = 1262.3167637711254
+lobe_seed = 3166471908
+
+[node name="Cumulus_54" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1735886945]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5169.106, -35.134705, 538.5648)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 702.9256293534196
+height = 1402.0355886286386
+lobe_seed = 3574051551
+
+[node name="Cumulus_55" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2116049392]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6263.779, 62.115757, 5262.095)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 861.7410604018874
+height = 1634.477321724953
+lobe_seed = 3339208885
+
+[node name="Cumulus_56" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1082000014]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6292.5767, 134.9865, 7138.029)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 996.5609400963748
+height = 2112.800774956422
+lobe_seed = 3808081297
+
+[node name="Cumulus_57" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1273788989]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5886.0386, -63.71003, 10746.611)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1248.273942806026
+height = 2895.0178066433346
+lobe_seed = 3096563290
+
+[node name="Tower_14" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1261574074]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5919.568, 42.931473, 11871.305)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1519.0502373887791
+height = 6215.408217316347
+lobe_seed = 3047404497
+
+[node name="Cumulus_58" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1546972680]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5106.097, 108.01277, 14059.446)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1012.6817158945422
+height = 2517.6775769049837
+lobe_seed = 2485019540
+
+[node name="LowPatch_33" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=578218352]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5130.584, -57.481304, 17430.156)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 778.0781126319403
+height = 293.29036885247604
+lobe_seed = 2990705782
+
+[node name="Cumulus_59" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=691431075]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5541.8823, -132.24107, 19884.176)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 781.3970881852947
+height = 1902.837070265866
+lobe_seed = 1019424060
+
+[node name="Cumulus_60" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=294261315]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2589.8076, 107.64506, -21658.668)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 997.3776398735214
+height = 1789.8132436540218
+lobe_seed = 2964335313
+
+[node name="Tower_15" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1638790362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3211.0942, -60.345448, -19352.574)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1461.7527421638497
+height = 6077.459333866886
+lobe_seed = 3120180327
+
+[node name="Tower_16" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=184181803]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2557.7979, -26.810083, -16551.027)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1565.4650290846294
+height = 5433.510675048616
+lobe_seed = 4001131692
+
+[node name="Cumulus_61" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1671251502]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3614.367, -92.26633, -13307.797)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 693.7797309741301
+height = 1989.096906470807
+lobe_seed = 1586180926
+
+[node name="LowPatch_34" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=931053701]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3824.2078, 4.189986, -12146.964)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 607.8676268222702
+height = 313.80779233089635
+lobe_seed = 1829084072
+
+[node name="LowPatch_35" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1086370362]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3567.375, 112.84749, -10047.101)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 817.0468211272919
+height = 401.446710034359
+lobe_seed = 3166768587
+
+[node name="LowPatch_36" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1851527836]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3513.2495, -129.22289, 982.2289)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 661.2600586379064
+height = 362.475338353237
+lobe_seed = 3871461249
+
+[node name="Cumulus_62" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=189350157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4198.858, 39.199303, 10379.72)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 990.3953980443248
+height = 2625.121994794446
+lobe_seed = 1467317440
+
+[node name="LowPatch_37" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1486778511]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2880.63, -131.88564, 12194.311)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 638.770710111929
+height = 280.8887574330275
+lobe_seed = 4192633860
+
+[node name="Cumulus_63" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=76764914]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3204.689, -16.980484, 13721.398)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1002.9695758954724
+height = 1961.8432478571044
+lobe_seed = 4072248576
+
+[node name="Tower_17" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=966396869]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3794.8228, 121.744736, 15935.803)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1534.7792922451504
+height = 5384.888928729059
+lobe_seed = 1864672345
+
+[node name="Cumulus_64" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=694151396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3288.0984, -103.87082, 18430.402)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 782.9347192003203
+height = 1669.5852109586867
+lobe_seed = 3273852894
+
+[node name="Cumulus_65" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=743523353]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2658.2441, 82.08598, 19950.79)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 928.4457294833288
+height = 1760.9808685162131
+lobe_seed = 1853732226
+
+[node name="Cumulus_66" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2043599300]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1097.5498, 29.994732, -21943.727)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 882.686816788209
+height = 1523.098863158462
+lobe_seed = 3810066626
+
+[node name="Cumulus_67" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=688708682]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -634.67523, 123.82575, -17868.48)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 794.0883287754947
+height = 1830.6670109631232
+lobe_seed = 4144088734
+
+[node name="Cumulus_68" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1505848713]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1937.8258, -133.79407, -16076.955)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1188.802303957878
+height = 2514.2537735733094
+lobe_seed = 1475522513
+
+[node name="LowPatch_38" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1551099791]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -433.5599, -3.5259783, -13220.245)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1082.761580525174
+height = 446.1801626526375
+lobe_seed = 3343711612
+
+[node name="LowPatch_39" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1194374063]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -222.56483, -109.31331, -12397.166)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1035.7542783934236
+height = 402.76688589480034
+lobe_seed = 3089776241
+
+[node name="Cumulus_69" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=270756107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -810.93744, 66.785484, -7199.4287)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 785.5234382351971
+height = 1908.926960860168
+lobe_seed = 4200557478
+
+[node name="LowPatch_40" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1121225941]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2034.4143, -128.87675, -5953.6733)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 706.730865498654
+height = 395.4504575415915
+lobe_seed = 248905581
+
+[node name="LowPatch_41" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=825500458]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -455.10052, -139.0516, -2422.1375)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 745.6746788834339
+height = 392.27833063920355
+lobe_seed = 1995020983
+
+[node name="LowPatch_42" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1532999309]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -611.4618, -66.263306, -1877.9465)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 924.7166542166428
+height = 451.12414897953295
+lobe_seed = 1801001357
+
+[node name="LowPatch_43" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=202143959]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2048.6128, -122.724754, 1081.6343)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 660.2593064476912
+height = 372.9955293308474
+lobe_seed = 229671584
+
+[node name="LowPatch_44" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=468092001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1662.819, -124.484955, 2393.0417)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 727.7364749767761
+height = 360.49625434016104
+lobe_seed = 3051823370
+
+[node name="Cumulus_70" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=853712020]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1282.2295, 69.05499, 15314.654)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 725.4337769268609
+height = 1602.6613450523762
+lobe_seed = 3167366321
+
+[node name="Cumulus_71" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=662622852]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1961.7836, 143.50821, 16827.01)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 942.9832779327182
+height = 2256.1654352185933
+lobe_seed = 2259567688
+
+[node name="Cumulus_72" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=964359033]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1534.417, -73.7026, 17915.648)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 800.0363322847733
+height = 1747.8998863919246
+lobe_seed = 1364011186
+
+[node name="Cumulus_73" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=157025136]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1811.3998, -63.301956, 21966.584)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1083.4281667157088
+height = 2509.3500714857432
+lobe_seed = 2183175349
+
+[node name="LowPatch_45" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1149607591]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 636.8237, -90.53275, -20538.334)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 885.7469860737233
+height = 359.0727152106128
+lobe_seed = 3311036221
+
+[node name="LowPatch_46" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=60678830]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2107.3896, 114.855484, -19388.771)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 549.2986813948337
+height = 321.68915560534367
+lobe_seed = 3443349429
+
+[node name="Cumulus_74" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=699267359]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 817.9538, -51.06124, -11904.61)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 932.0541561515328
+height = 2090.9961740130684
+lobe_seed = 3675729800
+
+[node name="Cumulus_75" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=534447691]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 393.2534, -101.02502, -10844.094)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 879.8250665183218
+height = 2058.3798505362493
+lobe_seed = 1961746859
+
+[node name="Cumulus_76" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=861339653]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 195.80008, 41.345768, -7963.863)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 866.9334911031065
+height = 1846.143162775688
+lobe_seed = 1629291046
+
+[node name="Cumulus_77" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=428937414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 914.2008, 87.652176, -4833.8306)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 730.6454123937297
+height = 1730.835299589772
+lobe_seed = 4242777308
+
+[node name="Cumulus_78" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=152111380]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2105.6262, -85.530075, -2569.8386)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 994.9373071387554
+height = 1688.99326679838
+lobe_seed = 1458130603
+
+[node name="Cumulus_79" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2113160800]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 660.5115, -128.24707, -101.78157)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 643.4399191371558
+height = 1680.0097093621216
+lobe_seed = 654753784
+
+[node name="Cumulus_80" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=572762257]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1702.821, -123.78672, 567.89594)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 621.9438103775517
+height = 1656.7242936424705
+lobe_seed = 2475770905
+
+[node name="Tower_18" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=490624826]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2195.77, -79.40568, 4355.947)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1375.997450867122
+height = 6186.397111093305
+lobe_seed = 2953208555
+
+[node name="Cumulus_81" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=350545040]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1783.9644, 17.9254, 4429.1406)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1140.546877530085
+height = 2874.2951880528253
+lobe_seed = 2209704663
+
+[node name="Cumulus_82" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1374807421]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 183.71507, -108.26583, 21323.438)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1061.278196250661
+height = 2451.2070283087587
+lobe_seed = 2848458835
+
+[node name="Cumulus_83" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1373940596]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3269.6858, -116.1762, -21602.227)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 911.7144305187626
+height = 2094.86377069222
+lobe_seed = 4172603636
+
+[node name="LowPatch_47" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1728359352]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3870.0164, 25.249565, -11414.747)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 740.2727588267934
+height = 377.0955173609907
+lobe_seed = 690773315
+
+[node name="Cumulus_84" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2030947982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4217.8354, -103.778046, -9221.325)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 720.1957000774279
+height = 1947.9426530809408
+lobe_seed = 1400372074
+
+[node name="Tower_19" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=433605242]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4220.077, 65.736885, -7204.7134)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1489.703904967659
+height = 5450.078186913939
+lobe_seed = 2749262169
+
+[node name="Tower_20" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=609252144]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2648.201, -131.20319, -4732.2954)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1405.3296316862734
+height = 6209.499187946571
+lobe_seed = 1650738621
+
+[node name="Cumulus_85" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2238403]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2721.0151, -145.63458, -2712.2493)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1141.4107868258857
+height = 2506.487739388781
+lobe_seed = 3425824736
+
+[node name="Tower_21" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=687254401]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4108.879, 123.14962, -1462.8151)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1368.7403096239343
+height = 5287.825109950931
+lobe_seed = 1521324253
+
+[node name="Cumulus_86" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1754558684]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4206.953, -40.917133, 56.461967)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 837.9985070249993
+height = 1775.759173807474
+lobe_seed = 3631108829
+
+[node name="Tower_22" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=953396378]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2949.7866, -74.447205, 2224.535)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1564.8759926021285
+height = 6005.091414713934
+lobe_seed = 1864546211
+
+[node name="Cumulus_87" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=345892732]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4092.8347, -132.9069, 5123.469)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 898.2735453758639
+height = 1774.1101360441962
+lobe_seed = 305295689
+
+[node name="LowPatch_48" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2129571600]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2914.6892, -25.466377, 8397.686)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 934.952905138846
+height = 375.10208572799786
+lobe_seed = 2441111605
+
+[node name="LowPatch_49" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=745125212]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2248.5293, -116.86715, 9816.722)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 650.9481547699291
+height = 337.1871535325182
+lobe_seed = 1460689057
+
+[node name="LowPatch_50" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=354743788]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2355.815, -53.9774, 11920.079)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 696.5437921117298
+height = 283.7595149517391
+lobe_seed = 614809823
+
+[node name="LowPatch_51" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=911122134]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2257.8118, -115.1355, 21191.707)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1040.309258466204
+height = 409.2314674478605
+lobe_seed = 843913573
+
+[node name="Cumulus_88" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=969357252]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6177.0635, -51.71181, -13135.866)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 702.7968919198694
+height = 1775.74119838331
+lobe_seed = 3792227674
+
+[node name="LowPatch_52" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1610159243]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6130.3853, -34.095554, -9776.38)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 895.0253317658004
+height = 420.5021092421436
+lobe_seed = 2722655353
+
+[node name="Cumulus_89" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2082796639]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6580.1646, 63.77181, -6630.987)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1135.6991769683193
+height = 2164.720845685303
+lobe_seed = 3628952241
+
+[node name="Tower_23" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1373127155]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4527.1934, 27.194166, -4907.3843)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1462.6226041936156
+height = 6177.87310052843
+lobe_seed = 311200204
+
+[node name="Tower_24" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1614515666]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5541.2153, 71.46898, -4135.799)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1705.2170636183084
+height = 6721.452081968809
+lobe_seed = 2856693990
+
+[node name="Tower_25" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2044007424]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4449.0464, 72.50005, -1778.0459)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1398.8873823113977
+height = 5591.557931354737
+lobe_seed = 733509140
+
+[node name="Tower_26" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=3966760]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4437.674, -80.00909, 2086.3875)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1245.3971987082705
+height = 5302.486862784283
+lobe_seed = 677305263
+
+[node name="Cumulus_90" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1100074997]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5310.65, 109.0161, 4200.674)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 946.476162005159
+height = 2084.8036963480527
+lobe_seed = 3582483403
+
+[node name="Cumulus_91" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=412480974]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4723.468, 128.24174, 4645.672)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 821.1537664759277
+height = 1432.5714958467106
+lobe_seed = 1165385148
+
+[node name="Tower_27" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1961808795]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5721.8975, 123.91069, 7057.586)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1270.265561675925
+height = 5680.14506831129
+lobe_seed = 3146081232
+
+[node name="LowPatch_53" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1508651388]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6591.3164, -70.65836, 10826.782)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 826.3800279363122
+height = 451.7208567950513
+lobe_seed = 647632392
+
+[node name="LowPatch_54" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=750170751]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5336.778, -130.4107, 13044.661)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 644.1278420729739
+height = 350.80881511350896
+lobe_seed = 2324861906
+
+[node name="LowPatch_55" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=388702535]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6400.6436, -127.20219, 14671.826)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1068.4096249661725
+height = 395.8395397796349
+lobe_seed = 4045579240
+
+[node name="LowPatch_56" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1173534545]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6293.249, -44.96845, 16647.723)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 838.7407774852543
+height = 395.1976806391788
+lobe_seed = 69115078
+
+[node name="LowPatch_57" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=116329648]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6045.568, 113.8378, 18888.793)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 875.0018512310016
+height = 457.99044913307773
+lobe_seed = 3517498858
+
+[node name="Cumulus_92" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=770666323]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5155.0845, -70.347824, 20692.234)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1031.779053805585
+height = 1661.1718994335995
+lobe_seed = 1891038041
+
+[node name="LowPatch_58" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1472312185]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6736.8076, -77.51878, -11143.252)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 993.8014034177354
+height = 374.46916863924474
+lobe_seed = 997486022
+
+[node name="Cumulus_93" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1889721547]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7321.497, 122.54766, -10415.909)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 908.3803035726072
+height = 1475.706109722151
+lobe_seed = 902269277
+
+[node name="Cumulus_94" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1393228748]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7178.846, 118.72013, -8769.916)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 989.6010854749547
+height = 2746.390002176251
+lobe_seed = 900246587
+
+[node name="Tower_28" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1702491485]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7420.461, 20.769793, -6002.719)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1575.333646097095
+height = 6051.929069194441
+lobe_seed = 951400746
+
+[node name="Tower_29" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1571544848]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7486.0225, 46.89578, -3811.7134)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1803.336776924159
+height = 7375.545055198772
+lobe_seed = 2513787207
+
+[node name="Cumulus_95" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=88976509]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7520.3594, 11.555439, -420.9782)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 871.4083649297901
+height = 2372.1743452115606
+lobe_seed = 2542679140
+
+[node name="Cumulus_96" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1555221565]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8538.589, 69.08922, 938.0393)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 794.722848790997
+height = 1438.6052499280154
+lobe_seed = 3886110706
+
+[node name="LowPatch_59" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=396457309]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8466.839, -107.94422, 2231.304)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 715.0278408218226
+height = 370.4791641851598
+lobe_seed = 2279307991
+
+[node name="Cumulus_97" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1573475254]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7990.355, -141.86847, 7978.7134)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 719.4479623995462
+height = 1935.267478328664
+lobe_seed = 3358764997
+
+[node name="LowPatch_60" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=140363393]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6829.3364, 149.04282, 15148.328)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1055.6948579176103
+height = 417.3781824949647
+lobe_seed = 304876606
+
+[node name="LowPatch_61" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1964086835]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7905.9087, -46.071465, 15435.779)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 651.7663029821092
+height = 311.81442605088876
+lobe_seed = 1597002481
+
+[node name="Cumulus_98" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1194480457]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7462.9507, 47.62777, 19289.592)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 682.2927754643639
+height = 1564.8156862232718
+lobe_seed = 442754558
+
+[node name="Tower_30" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1615202546]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7304.5034, -10.932702, 20722.092)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1445.9344750408145
+height = 6047.276356126392
+lobe_seed = 128215732
+
+[node name="LowPatch_62" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=959175586]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10390.624, -30.7899, -20664.266)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 818.5327649782571
+height = 424.89816872073845
+lobe_seed = 775372864
+
+[node name="Cumulus_99" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1688521250]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10757.771, -40.17682, -19436.672)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 775.146279745634
+height = 2028.1040796552447
+lobe_seed = 1247193132
+
+[node name="Cumulus_100" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=70258589]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10978.686, -107.8356, -15795.791)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 652.0670981816032
+height = 1986.0301008254064
+lobe_seed = 1484260587
+
+[node name="Cumulus_101" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=233980033]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9965.835, 111.02108, -13282.673)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 839.998517463022
+height = 1434.3025886060857
+lobe_seed = 3376885629
+
+[node name="Cumulus_102" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1539606178]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10978.2295, 149.34335, -11376.329)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 769.3525931671103
+height = 2103.976492992854
+lobe_seed = 2896430074
+
+[node name="Cumulus_103" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1198521295]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9685.278, -147.53494, -9494.742)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 989.426478767915
+height = 2614.856555865126
+lobe_seed = 3799965794
+
+[node name="Tower_31" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=902491302]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10329.017, -145.55945, -7310.0313)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1307.778958843918
+height = 5742.00994915474
+lobe_seed = 1680857212
+
+[node name="Tower_32" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1339329818]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9175.914, -50.93651, -5121.563)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1503.422155067179
+height = 5284.542834102524
+lobe_seed = 1138576948
+
+[node name="Cumulus_104" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=696846285]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10428.324, 94.204506, -2463.3625)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 954.5336209687284
+height = 1675.8354009779923
+lobe_seed = 2573737788
+
+[node name="Cumulus_105" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=647915067]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8955.385, 33.850353, -2134.4067)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1085.288644842789
+height = 2365.710334980025
+lobe_seed = 3865576195
+
+[node name="LowPatch_63" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1131877449]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9975.739, -11.060098, 861.75616)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 781.1513696517644
+height = 413.7937481553852
+lobe_seed = 1798329441
+
+[node name="LowPatch_64" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1827918601]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8913.181, -24.304497, 6703.0493)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 893.2376301294621
+height = 476.6222439708832
+lobe_seed = 3857694656
+
+[node name="Cumulus_106" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1768208807]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10348.797, 129.74232, 21260.473)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 965.6242493882012
+height = 2062.363268671946
+lobe_seed = 1085938121
+
+[node name="Cumulus_107" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1870691694]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12345.532, -8.446643, -20376.928)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 857.774240633873
+height = 1480.1230207367314
+lobe_seed = 2505404851
+
+[node name="Cumulus_108" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=748314834]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12320.757, 125.2884, -18188.156)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 940.3151003633168
+height = 2286.740974727926
+lobe_seed = 1107371825
+
+[node name="Cumulus_109" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=297819403]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12450.055, -82.43394, -17251.361)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 914.0671744607424
+height = 1682.9929249616694
+lobe_seed = 4082404585
+
+[node name="LowPatch_65" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1327927365]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12433.549, 52.079147, -13876.543)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 770.0317725992538
+height = 394.20154506366856
+lobe_seed = 3351640251
+
+[node name="Cumulus_110" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1489382889]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11892.535, 36.81643, -11027.12)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1092.2019179535723
+height = 1956.440053038806
+lobe_seed = 1968710622
+
+[node name="Cumulus_111" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=966883140]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12551.055, -80.71444, -10301.156)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1202.7332354861437
+height = 2767.254976190313
+lobe_seed = 3038230293
+
+[node name="LowPatch_66" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=255409765]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12886.726, 20.74442, -7361.789)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 755.9736373005172
+height = 441.5223996663202
+lobe_seed = 1756660445
+
+[node name="LowPatch_67" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1785889085]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11094.781, -49.223293, -4473.069)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 720.7920277680025
+height = 366.6717755531712
+lobe_seed = 910789183
+
+[node name="LowPatch_68" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=369626983]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11167.633, -91.883286, -3400.667)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 848.6866272812654
+height = 402.0386676542282
+lobe_seed = 644033536
+
+[node name="LowPatch_69" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1918062277]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12138.112, -85.995094, -1290.3981)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 862.2987370223717
+height = 446.7515713858487
+lobe_seed = 331797893
+
+[node name="LowPatch_70" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=739649662]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11550.387, 91.05461, 1474.9875)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 597.324746341769
+height = 296.1499452968703
+lobe_seed = 57771346
+
+[node name="LowPatch_71" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=988084757]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13000.992, 131.04373, 17819.385)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 587.0805738752315
+height = 284.96577801328687
+lobe_seed = 3461145701
+
+[node name="LowPatch_72" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=231511969]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12146.266, -23.28726, 20676.785)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 748.1962642027356
+height = 317.7843009412876
+lobe_seed = 1735684401
+
+[node name="LowPatch_73" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1374214818]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14335.143, -143.84833, -19006.105)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 758.9925209121907
+height = 423.40507024845334
+lobe_seed = 3170017959
+
+[node name="Cumulus_112" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=335998069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14411.076, 115.47899, -17428.701)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 780.1642111528977
+height = 2019.8951389761644
+lobe_seed = 4117011859
+
+[node name="LowPatch_74" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=751017042]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13903.261, -39.45559, -15379.817)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 781.062082373905
+height = 424.3815886576175
+lobe_seed = 2682243752
+
+[node name="LowPatch_75" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=7790684]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15051.066, -52.96466, -11039.581)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 873.1225441893002
+height = 375.77029735678025
+lobe_seed = 2673459274
+
+[node name="Cumulus_113" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1456962731]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13274.857, 4.0204883, -9407.686)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1226.077626998716
+height = 2624.893575197016
+lobe_seed = 2067581144
+
+[node name="Cumulus_114" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1414200569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13378.328, -32.965466, -7556.0684)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 854.4445564335359
+height = 1357.8142849000285
+lobe_seed = 2327580692
+
+[node name="LowPatch_76" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1152646796]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13461.218, -95.74929, 15458.566)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 670.6820071555098
+height = 332.13700481657025
+lobe_seed = 2739749167
+
+[node name="LowPatch_77" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=956666470]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15425.494, 128.53943, -18597.85)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 951.6347858115366
+height = 380.1126059063744
+lobe_seed = 2788123179
+
+[node name="LowPatch_78" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1012793440]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16385.377, 30.351501, -16057.783)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 736.1091512303649
+height = 378.10459558587513
+lobe_seed = 829192361
+
+[node name="LowPatch_79" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1310245274]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17273.031, 90.69693, -12270.703)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 894.9789214767693
+height = 453.6168297395805
+lobe_seed = 1537922638
+
+[node name="LowPatch_80" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=593419232]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15704.155, -113.77766, -10708.499)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 705.2094844451572
+height = 380.1948290513218
+lobe_seed = 2020857155
+
+[node name="Cumulus_115" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=211191700]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17402.23, -100.58395, -8152.7163)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 752.3536435817555
+height = 1741.6558941913186
+lobe_seed = 4282024754
+
+[node name="LowPatch_81" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=805295327]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17354.732, -127.03925, -4915.891)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 826.6039381367725
+height = 407.831635737699
+lobe_seed = 1873710734
+
+[node name="LowPatch_82" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1431507633]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16599.605, -92.10968, -3883.2302)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 757.5411091246515
+height = 376.991724388397
+lobe_seed = 3356033999
+
+[node name="Cumulus_116" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=997390195]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16674.758, 149.80244, 12773.952)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 883.9541668053404
+height = 1595.6332219556234
+lobe_seed = 563858576
+
+[node name="Cumulus_117" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=976040992]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17496.682, 139.94696, 13607.46)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 718.8455903163641
+height = 1495.828987606361
+lobe_seed = 647010426
+
+[node name="LowPatch_83" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=561202640]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17315.133, -101.438644, 17105.404)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 967.8541380860412
+height = 475.5342958163056
+lobe_seed = 3899614647
+
+[node name="Cumulus_118" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=436244346]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16360.262, -125.08127, 17715.88)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 829.6295048334753
+height = 1711.8919304963235
+lobe_seed = 2098172400
+
+[node name="LowPatch_84" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1012435746]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17382.863, -129.9496, 20363.516)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 611.8633564201796
+height = 374.5889429551572
+lobe_seed = 2112983818
+
+[node name="LowPatch_85" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1367137110]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19073.293, -102.79172, -15941.264)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 600.6087492182245
+height = 263.63629610896066
+lobe_seed = 2349217281
+
+[node name="LowPatch_86" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1758780417]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17618.607, -42.229904, -13143.78)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 692.1688919940473
+height = 362.1375885969599
+lobe_seed = 1457516578
+
+[node name="Cumulus_119" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=852112316]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19148.584, -18.631956, -10136.449)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1058.4167372902546
+height = 2239.222664421025
+lobe_seed = 3264024027
+
+[node name="Cumulus_120" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1029536536]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18854.467, -96.85812, -8594.546)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1137.883047514516
+height = 2274.6947853565844
+lobe_seed = 2528940596
+
+[node name="Cumulus_121" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1288319490]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19724.43, -1.1985093, -4846.9683)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1015.11545236527
+height = 1903.338873104174
+lobe_seed = 3586454651
+
+[node name="LowPatch_87" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1748330213]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18937.684, 99.824844, 1774.6812)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 849.9043998905217
+height = 350.1443961340601
+lobe_seed = 2848562624
+
+[node name="LowPatch_88" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=340193655]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19081.748, -59.667866, 7629.8325)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 549.4257853059066
+height = 259.06992147482487
+lobe_seed = 794944862
+
+[node name="LowPatch_89" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=872990986]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19503.523, 62.500942, 12346.328)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 922.8166944428332
+height = 445.84960766318966
+lobe_seed = 900212636
+
+[node name="Cumulus_122" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=620442327]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17983.664, -131.6821, 14940.849)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 711.8501940291932
+height = 1693.4632758383607
+lobe_seed = 265854840
+
+[node name="LowPatch_90" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=550600208]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18530.297, -77.690414, 15712.355)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 896.3236096798178
+height = 448.26638463879607
+lobe_seed = 1674443373
+
+[node name="Cumulus_123" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1957490219]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19377.338, -129.37605, 17948.752)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 984.0661335205392
+height = 1909.1612577988476
+lobe_seed = 846624787
+
+[node name="Cumulus_124" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=832843480]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17883.654, 149.90884, 21146.086)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 634.009668005354
+height = 1593.670973112362
+lobe_seed = 4067788839
+
+[node name="Cumulus_125" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1558613750]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20632.979, -65.01142, -19171.969)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 630.1937151998859
+height = 1474.516625672727
+lobe_seed = 3467596521
+
+[node name="LowPatch_91" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=220358471]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20032.793, -138.2537, -17230.936)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 744.6808033377723
+height = 438.6938478462728
+lobe_seed = 2963277130
+
+[node name="LowPatch_92" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1978328443]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20047.254, -131.30911, -14804.617)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 798.1665673488014
+height = 363.5778279202528
+lobe_seed = 3182975657
+
+[node name="Cumulus_126" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=305161712]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20500.805, 137.56058, -12458.28)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 899.1143817052691
+height = 2021.245645713495
+lobe_seed = 4109444375
+
+[node name="Tower_33" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1957524358]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20207.152, -35.58138, -9632.863)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 1435.760018038964
+height = 6426.202117634677
+lobe_seed = 1045023791
+
+[node name="Cumulus_127" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=449800472]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21783.457, 137.60529, -6733.3535)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 800.2594181091023
+height = 1560.1146136497853
+lobe_seed = 3460285764
+
+[node name="Cumulus_128" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1753679398]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20436.389, -64.65881, -6342.239)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 880.4704744944177
+height = 2274.249158756018
+lobe_seed = 1543851176
+
+[node name="LowPatch_93" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=523391673]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19892.805, 22.49422, -3981.5205)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1045.0197661359966
+height = 377.62738089345646
+lobe_seed = 3249356610
+
+[node name="LowPatch_94" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1355720089]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20456.973, 23.221153, -1517.5258)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 671.2881478546153
+height = 258.3147810100719
+lobe_seed = 250283827
+
+[node name="LowPatch_95" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=189955926]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19820.604, -0.1396805, 1626.27)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1003.8158476844192
+height = 449.8969639545828
+lobe_seed = 1340941824
+
+[node name="Cumulus_129" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1534242564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20060.914, 52.342827, 3802.2317)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 836.3884658743297
+height = 2033.469354266615
+lobe_seed = 4094076853
+
+[node name="Cumulus_130" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1695943207]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20161.646, 53.4048, 5000.049)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1037.9791045031325
+height = 1749.182372393278
+lobe_seed = 1938194169
+
+[node name="Cumulus_131" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=126652718]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21932.088, 14.791006, 7204.671)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 1069.5788833386327
+height = 2057.643743809622
+lobe_seed = 1134192324
+
+[node name="Cumulus_132" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1407925157]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21736.055, -12.444279, 9665.734)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 896.0660292003317
+height = 1848.2671066591815
+lobe_seed = 4008476283
+
+[node name="LowPatch_96" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=447068103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21641.775, -100.25924, 11719.39)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 854.7313907699407
+height = 328.6795650901323
+lobe_seed = 193590413
+
+[node name="LowPatch_97" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=1167280557]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21566.82, 30.29108, 14523.061)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 1038.7689443890638
+height = 416.22889921335656
+lobe_seed = 2085569763
+
+[node name="Cumulus_133" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=442890419]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21671.645, -137.10405, 16391.707)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 966.4741319129098
+height = 2061.862266159712
+lobe_seed = 4098029872
+
+[node name="LowPatch_98" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2098987569]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21156.043, -15.313232, 18841.41)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("7_d1m6b")
+radius = 800.5549704450668
+height = 494.6525919476028
+lobe_seed = 2164050798
+
+[node name="Cumulus_134" type="Node3D" parent="PaintedCloudVolume/MainLayer" unique_id=2062044824]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20068.9, 116.373825, 20229.596)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("5_svvho")
+radius = 841.1250305652719
+height = 2359.1782799312305
+lobe_seed = 879566739
+
+[node name="LowDeckLayer" type="Node3D" parent="PaintedCloudVolume" unique_id=1230785336]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5400, 0)
+script = ExtResource("3_nk31j")
+noise = SubResource("FastNoiseLite_5de16")
+area_size = Vector2(44000, 44000)
+spacing = 13000.0
+scatter_seed = 21
+rules = Array[ExtResource("8_k1rqu")]([SubResource("Resource_h5sl1")])
+
+[node name="StratocumulusDeck_0" type="Node3D" parent="PaintedCloudVolume/LowDeckLayer" unique_id=742873721]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9404.305, 79.524445, -15683.727)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("9_wwhtr")
+radius = 6824.638191919294
+height = 622.960185669215
+lobe_seed = 3496964090
+
+[node name="StratocumulusDeck_1" type="Node3D" parent="PaintedCloudVolume/LowDeckLayer" unique_id=1656695583]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6257.7437, 19.471085, -13627.988)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("9_wwhtr")
+radius = 6453.338494736388
+height = 647.5504473991424
+lobe_seed = 2444033606
+
+[node name="StratocumulusDeck_2" type="Node3D" parent="PaintedCloudVolume/LowDeckLayer" unique_id=436128249]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5267.2285, 22.643482, 4028.9402)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("9_wwhtr")
+radius = 5959.513811431063
+height = 515.8483696121601
+lobe_seed = 532486860
+
+[node name="StratocumulusDeck_3" type="Node3D" parent="PaintedCloudVolume/LowDeckLayer" unique_id=2012830831]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7328.144, -0.6399572, -9632.176)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("9_wwhtr")
+radius = 5607.274768314597
+height = 551.9514853240623
+lobe_seed = 104278065
+
+[node name="StratocumulusDeck_4" type="Node3D" parent="PaintedCloudVolume/LowDeckLayer" unique_id=618344224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5907.3604, 97.29101, 10055.645)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("9_wwhtr")
+radius = 6257.1167437923705
+height = 546.5106278546601
+lobe_seed = 1675721264
+
+[node name="HighLayer" type="Node3D" parent="PaintedCloudVolume" unique_id=395783867]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -500, 0)
+script = ExtResource("3_nk31j")
+noise = SubResource("FastNoiseLite_norpd")
+area_size = Vector2(44000, 44000)
+spacing = 9000.0
+scatter_seed = 33
+rules = Array[ExtResource("8_k1rqu")]([SubResource("Resource_7eb7w")])
+
+[node name="AltocumulusField_0" type="Node3D" parent="PaintedCloudVolume/HighLayer" unique_id=1580799451]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14913.414, 6.1706543, -15770.878)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("10_62gnj")
+radius = 4235.182410478592
+height = 317.5983425974846
+lobe_seed = 924523192
+
+[node name="AltocumulusField_1" type="Node3D" parent="PaintedCloudVolume/HighLayer" unique_id=1543324856]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15632.31, 42.71786, 2467.1384)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("10_62gnj")
+radius = 4550.236812233925
+height = 408.2039776444435
+lobe_seed = 1180237651
+
+[node name="AltocumulusField_2" type="Node3D" parent="PaintedCloudVolume/HighLayer" unique_id=1635836750]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4902.042, 277.61655, -11908.513)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("10_62gnj")
+radius = 4577.248954772949
+height = 334.4693073630333
+lobe_seed = 2773370167
+
+[node name="AltocumulusField_3" type="Node3D" parent="PaintedCloudVolume/HighLayer" unique_id=557208829]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -994.13635, -117.70182, 8056.0527)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("10_62gnj")
+radius = 4412.42810934782
+height = 374.43812891840935
+lobe_seed = 3283438929
+
+[node name="AltocumulusField_4" type="Node3D" parent="PaintedCloudVolume/HighLayer" unique_id=866326993]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8048.676, -274.99188, -10682.456)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("10_62gnj")
+radius = 3842.767357826233
+height = 398.36436331272125
+lobe_seed = 2293949418
+
+[node name="AltocumulusField_5" type="Node3D" parent="PaintedCloudVolume/HighLayer" unique_id=724772012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7091.179, -248.56094, 3297.9087)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("10_62gnj")
+radius = 5015.849351882935
+height = 428.91393065452576
+lobe_seed = 3632949670
+
+[node name="AltocumulusField_6" type="Node3D" parent="PaintedCloudVolume/HighLayer" unique_id=250700960]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8106.831, -141.60329, 8236.952)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("10_62gnj")
+radius = 4379.486638307571
+height = 423.5772496461868
+lobe_seed = 4055317214
+
+[node name="HandPlaced" type="Node3D" parent="PaintedCloudVolume" unique_id=1156986682]
+
+[node name="HeroTower" type="Node3D" parent="PaintedCloudVolume/HandPlaced" unique_id=1282565790]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3000, -4500, -4000)
+script = ExtResource("4_fy1p0")
+recipe = ExtResource("6_x31ta")
+radius = 2000.0
+height = 8500.0
+detail = 1.2
+lobe_seed = 3
+
+[node name="Beacon" type="MeshInstance3D" parent="." unique_id=2122332377]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4500, 4000, -13000)
+mesh = SubResource("SphereMesh_urb6m")
+
+[node name="HoldMarker" type="MeshInstance3D" parent="." unique_id=1082164237]
+mesh = SubResource("SphereMesh_5t1n4")
+
+[node name="FlyCamera" type="Camera3D" parent="." unique_id=689653651]
+transform = Transform3D(1, 0, 0, 0, 0.9945219, -0.104528464, 0, 0.104528464, 0.9945219, 0, 2400, 16000)
+current = true
+fov = 70.0
+far = 120000.0
+script = ExtResource("11_vkopi")
+
+[node name="HUD" type="Label" parent="." unique_id=549528824 node_paths=PackedStringArray("beacon", "hold_marker")]
+offset_left = 12.0
+offset_top = 8.0
+offset_right = 12.0
+offset_bottom = 8.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.6)
+script = ExtResource("12_qvfii")
+beacon = NodePath("../Beacon")
+hold_marker = NodePath("../HoldMarker")

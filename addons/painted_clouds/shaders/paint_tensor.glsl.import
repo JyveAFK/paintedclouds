@@ -1,0 +1,14 @@
+[remap]
+
+importer="glsl"
+type="RDShaderFile"
+uid="uid://pjk5xdpb8x82"
+path="res://.godot/imported/paint_tensor.glsl-2dc62d7bfa194500869e4ce70a959d74.res"
+
+[deps]
+
+source_file="res://addons/painted_clouds/shaders/paint_tensor.glsl"
+dest_files=["res://.godot/imported/paint_tensor.glsl-2dc62d7bfa194500869e4ce70a959d74.res"]
+
+[params]
+

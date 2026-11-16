@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="PaintedCloudRecipe" format=3 uid="uid://dhoa0qduj5g6x"]
+
+[ext_resource type="Script" uid="uid://bbngyytll7t6e" path="res://addons/painted_clouds/cloud_lobe_rule.gd" id="1_evlga"]
+[ext_resource type="Script" uid="uid://bnxlqtffoje4u" path="res://addons/painted_clouds/cloud_part.gd" id="2_22h4o"]
+[ext_resource type="Script" uid="uid://bcdbg2u14hvbd" path="res://addons/painted_clouds/cloud_recipe.gd" id="3_3qda3"]
+
+[sub_resource type="Resource" id="Resource_e6m8r"]
+script = ExtResource("1_evlga")
+count = 6
+flatten = 0.6
+squash_scale = 1.6
+
+[sub_resource type="Resource" id="Resource_rxtma"]
+script = ExtResource("1_evlga")
+placement = 1
+count = 6
+size = Vector2(0.3, 0.55)
+outward = Vector2(0.7, 0.95)
+up_bias = 0.8
+outward_bias = 1.0
+
+[sub_resource type="Resource" id="Resource_5kxo0"]
+script = ExtResource("2_22h4o")
+squash_from_height = true
+height_at = 0.45
+
+[resource]
+script = ExtResource("3_3qda3")
+display_name = "Low Patch"
+gizmo_color = Color(0.55, 0.75, 1, 0.8)
+noise_scale = 0.8
+parts = Array[ExtResource("2_22h4o")]([SubResource("Resource_5kxo0")])
+lobes = Array[ExtResource("1_evlga")]([SubResource("Resource_e6m8r"), SubResource("Resource_rxtma")])

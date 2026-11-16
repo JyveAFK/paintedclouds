@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="PaintedCloudRecipe" format=3 uid="uid://qkdpflce7itk"]
+
+[ext_resource type="Script" uid="uid://bbngyytll7t6e" path="res://addons/painted_clouds/cloud_lobe_rule.gd" id="1_8totp"]
+[ext_resource type="Script" uid="uid://bnxlqtffoje4u" path="res://addons/painted_clouds/cloud_part.gd" id="2_nvdil"]
+[ext_resource type="Script" uid="uid://bcdbg2u14hvbd" path="res://addons/painted_clouds/cloud_recipe.gd" id="3_rkrss"]
+
+[sub_resource type="Resource" id="Resource_4oqdx"]
+script = ExtResource("1_8totp")
+part_index = 2
+count = 7
+size = Vector2(0.25, 0.4)
+outward = Vector2(0.3, 0.8)
+up_bias = 1.0
+squash_scale = 1.55
+
+[sub_resource type="Resource" id="Resource_p2qre"]
+script = ExtResource("1_8totp")
+count = 20
+height_range = Vector2(0.15, 1)
+
+[sub_resource type="Resource" id="Resource_epv31"]
+script = ExtResource("1_8totp")
+placement = 1
+count = 28
+size = Vector2(0.3, 0.55)
+outward = Vector2(0.7, 0.95)
+up_bias = 0.8
+outward_bias = 1.0
+
+[sub_resource type="Resource" id="Resource_gphag"]
+script = ExtResource("2_nvdil")
+shape = 1
+height_at = 0.0
+radius_lift = 0.8
+top_radius_lift = -0.9
+
+[sub_resource type="Resource" id="Resource_2ru6e"]
+script = ExtResource("2_nvdil")
+radius_scale = 1.27
+squash = 0.8
+height_at = 0.68
+
+[sub_resource type="Resource" id="Resource_gtnau"]
+script = ExtResource("2_nvdil")
+radius_scale = 1.6
+squash = 0.42
+height_at = 1.0
+radius_lift = -0.64
+
+[resource]
+script = ExtResource("3_rkrss")
+display_name = "Tower"
+gizmo_color = Color(1, 0.7, 0.4, 0.8)
+noise_scale = 1.2
+parts = Array[ExtResource("2_nvdil")]([SubResource("Resource_gphag"), SubResource("Resource_2ru6e"), SubResource("Resource_gtnau")])
+lobes = Array[ExtResource("1_8totp")]([SubResource("Resource_4oqdx"), SubResource("Resource_p2qre"), SubResource("Resource_epv31")])

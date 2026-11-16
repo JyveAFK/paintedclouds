@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="PaintedCloudRecipe" format=3 uid="uid://382ow5rnoysj"]
+
+[ext_resource type="Script" uid="uid://bbngyytll7t6e" path="res://addons/painted_clouds/cloud_lobe_rule.gd" id="1_how8f"]
+[ext_resource type="Script" uid="uid://bnxlqtffoje4u" path="res://addons/painted_clouds/cloud_part.gd" id="2_021xl"]
+[ext_resource type="Script" uid="uid://bcdbg2u14hvbd" path="res://addons/painted_clouds/cloud_recipe.gd" id="3_xgu1q"]
+
+[sub_resource type="Resource" id="Resource_14myv"]
+script = ExtResource("1_how8f")
+
+[sub_resource type="Resource" id="Resource_0ceoi"]
+script = ExtResource("1_how8f")
+placement = 1
+count = 16
+size = Vector2(0.3, 0.55)
+outward = Vector2(0.7, 0.95)
+up_bias = 0.8
+outward_bias = 1.0
+
+[sub_resource type="Resource" id="Resource_3wkku"]
+script = ExtResource("2_021xl")
+shape = 1
+height_at = 0.0
+radius_lift = 0.6
+
+[resource]
+script = ExtResource("3_xgu1q")
+display_name = "Cumulus"
+parts = Array[ExtResource("2_021xl")]([SubResource("Resource_3wkku")])
+lobes = Array[ExtResource("1_how8f")]([SubResource("Resource_14myv"), SubResource("Resource_0ceoi")])
